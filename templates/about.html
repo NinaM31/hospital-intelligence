@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+    <h1>About: Hospital Intelligence</h1>
+    <h4>CSC588 Data Warehouse & Mining Systems Homework 3</h4>
+    <div class="about-grid">
+        <div><img  class="logo" src="{{url_for('static', filename='images/health_logo.png')}}"></div>
+        <div>
+            <p>
+            This project connects a hospital data warehouse with GPT-4o mini to transform OLAP results into clear,
+            human-readable insights by:
+            </p>
+            <ol>
+                <li>Generating summaries and recommendations</li>
+                <li>Convert natural language queries into SQL queries</li>
+            </ol>
+        </div>
+    </div>
+    <div>
+        <h4>Database Summary</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Table Name</th>
+                    <th>Number of Records</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for table in table_stats %}
+                <tr>
+                    <td>{{table.table_name}}</td>
+                    <td>{{table.record_count}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="card">
+    <h1>NL2SQL (Chat with Datawarehouse)</h1>
+
+    <input 
+        type="text" 
+        id="nlQuestion" 
+        placeholder="Example: What are the top 5 departments by total revenue?"
+    >
+    <button onclick="generateAndRun()">Generate and Run SQL</button>
+    <pre id="generatedSql"></pre>
+    <h3>SQL Result</h3>
+    <div id="customSqlResult"></div>
+</section>
+
+<script>
+function renderTable(columns, rows) {
+    const container = document.getElementById("customSqlResult");
+
+    let html = "<table><thead><tr>";
+    columns.forEach(col => {
+        html += `<th>${col}</th>`;
+    });
+    html += "</tr></thead><tbody>";
+
+    rows.forEach(row => {
+        html += "<tr>";
+        columns.forEach(col => {
+            html += `<td>${row[col]}</td>`;
+        });
+        html += "</tr>";
+    });
+    html += "</tbody></table>";
+    container.innerHTML = html;
+}
+
+async function generateAndRun(){
+    const question = document.getElementById("nlQuestion").value;
+    document.getElementById("generatedSql").textContent = "Generating SQL..."
+    document.getElementById("customSqlResult").textContent = " "
+    //  Generate and RUN
+    const response = await fetch("/nl-to-sql-run", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({question: question})
+    });
+
+    const data = await response.json();
+    if (data.error) {
+        document.getElementById("generatedSql").textContent = data.generated_sql;
+        resultBox.innerHTML = `<p class="error">${data.error}</p>`;
+        return;
+    }
+    document.getElementById("generatedSql").textContent = data.generated_sql;
+    renderTable(data.columns, data.rows);
+}
+</script>
+
+{% endblock %}

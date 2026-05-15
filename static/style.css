@@ -1,0 +1,89 @@
+/* My color palett of choice: https://lospec.com/palette-list/stamp-collection  */
+body {
+    font-family: Arial, sans-serif;
+    background: #e5ebea;
+    margin: 0;
+    padding: 0;
+    color: #221f32;
+}
+.container {
+    max-width: 800px;
+    margin: 30px auto;
+}
+.navbar {
+    background: #78abcb;
+    color: white;
+    padding: 20px 70px;
+}
+.nav-links {
+    display: flex;
+    justify-content:space-between;
+    margin:0 auto;
+    width:50%;
+}
+.nav-links a {
+    color: #e5ebea;
+    text-decoration: none;
+}
+.card {
+    background: white;
+    padding: 20px 30px;
+    margin-bottom: 25px;
+    border-radius: 10px;
+}
+.about-grid {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    align-items: center;
+}
+.logo {
+    height: 130px;
+    width: auto;
+    margin: 0 auto;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 16px
+}
+th,
+td {
+    padding: 8px;
+    border: 1px solid #4e88ac;
+}
+th {
+    background: #78abcb;
+}
+.buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+button {
+    padding: 10px 16px;
+    border: none;
+    background: #78abcb;
+    color: white;
+    border-radius: 8px;
+}
+button:hover {
+    background: #4e88ac;
+}
+select,
+input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.markdown-output {
+    background: #f8f9fb;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+}
+
+.saved-item {
+    border-bottom: 1px solid #ddd;
+    padding: 12px 0;
+}

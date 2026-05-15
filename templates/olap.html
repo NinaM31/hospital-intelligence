@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="card">
+    <h1>OLAP Analysis and GPT Insights</h1>
+    <select id="querySelect">
+        {% for key, value in queries.items() %}
+            <option value="{{ key }}">{{ value.title }}</option>
+        {% endfor %}
+    </select>
+
+    <div class="buttons"><button onclick="runOlapAndInsight()">Run OLAP Query & Generate GPT Insights</button></div>
+
+    <h3>OLAP Result</h3>
+    <div id="olapResult" class="markdown-output"></div>
+    <h3>GPT-4o mini Insight</h3>
+    <div  id="gptOutput" class="markdown-output"></div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+function renderTable(columns, rows) {
+    const container = document.getElementById("olapResult");
+
+    let html = "<table><thead><tr>";
+    columns.forEach(col => {
+        html += `<th>${col}</th>`;
+    });
+    html += "</tr></thead><tbody>";
+
+    rows.forEach(row => {
+        html += "<tr>";
+        columns.forEach(col => {
+            html += `<td>${row[col]}</td>`;
+        });
+        html += "</tr>";
+    });
+    html += "</tbody></table>";
+    container.innerHTML = html;
+}
+
+async function runOlapAndInsight() {
+    const queryKey = document.getElementById("querySelect").value;
+    document.getElementById("gptOutput").innerHTML = "<p>Generating Insights...</p>";
+    document.getElementById("olapResult").innerHTML = "<p>Fetching data...</p>";
+
+    //OLAP anf GPT-4o mini insights
+    const response = await fetch("/olap-run-and-insight", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({query_key: queryKey})
+    });
+
+    const data = await response.json();
+    renderTable(data.columns, data.rows);
+    document.getElementById("gptOutput").innerHTML = marked.parse(data.gpt_output);
+}
+</script>
+{% endblock %}
