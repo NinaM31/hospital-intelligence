@@ -27,6 +27,13 @@ From project folder, run:
 python app.py
 ```
 
+# Pipeline
+## NL2SQL
+![alt text](content/nl2sqlpipeline.png)
+
+## OLAP Insights
+![alt text](content/olappipeline.png)
+
 # Application pages
 ## About Page
 Show project introduction and table summary

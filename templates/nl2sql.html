@@ -12,9 +12,13 @@
     <button onclick="generateAndRun()">Generate and Run SQL</button>
     <pre id="generatedSql"></pre>
     <h3>SQL Result</h3>
-    <div id="customSqlResult"></div>
-</section>
 
+    <div id="customSqlResult"></div>
+
+    <h3>GPT-4o mini Insight</h3>
+    <div  id="gptOutput" class="markdown-output"></div>
+</section>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
 function renderTable(columns, rows) {
     const container = document.getElementById("customSqlResult");
@@ -39,7 +43,9 @@ function renderTable(columns, rows) {
 async function generateAndRun(){
     const question = document.getElementById("nlQuestion").value;
     document.getElementById("generatedSql").textContent = "Generating SQL..."
+    document.getElementById("gptOutput").innerHTML = "<p>Generating Insights...</p>";
     document.getElementById("customSqlResult").textContent = " "
+
     //  Generate and RUN
     const response = await fetch("/nl-to-sql-run", {
         method: "POST",
@@ -53,8 +59,11 @@ async function generateAndRun(){
         resultBox.innerHTML = `<p class="error">${data.error}</p>`;
         return;
     }
-    document.getElementById("generatedSql").textContent = data.generated_sql;
+
     renderTable(data.columns, data.rows);
+    document.getElementById("generatedSql").textContent = data.generated_sql;
+    document.getElementById("gptOutput").innerHTML = marked.parse(data.gpt_output);
+
 }
 </script>
 

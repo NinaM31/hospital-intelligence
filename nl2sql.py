@@ -1,4 +1,4 @@
-from gpt_utils import ask_gpt
+from gpt_utils import ask_gpt, dataframe_to_text
 
 SCHEMA_CONTEXT = """
 Hospital Data Warehouse Schema:
@@ -76,6 +76,30 @@ def build_sql_prompt(user_question):
         User question:
         {user_question}
     """
+
+def build_nl2sql_insight_prompt(df):
+    table_text = dataframe_to_text(df)
+
+    prompt = f"""
+        You are an expert data warehouse analyst.
+
+        The following OLAP result comes from a hospital data warehouse.
+
+        OLAP result:
+        {table_text}
+
+        Generate:
+        1. Summary: a concise natural language description of the result.
+        2. Insight: the main pattern or observation.
+        3. Recommendation: one practical recommendation.
+
+        Rules:
+        - Base your answer only on the provided table.
+        - Do not invent causes that are not supported by the data.
+        - Keep the answer concise and useful.
+        - Use clear academic/business language.
+    """
+    return prompt.strip()
 
 def generate_sql(uesr_question):
     prompt = build_sql_prompt(uesr_question)

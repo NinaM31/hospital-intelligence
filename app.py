@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 from olap_queries import OLAP_QUERIES
-from nl2sql import generate_sql
+from nl2sql import generate_sql, build_nl2sql_insight_prompt
 from gpt_utils import build_insight_prompt, ask_gpt
 from db import get_table_stats, run_query, save_insight, get_insights
 
@@ -61,13 +61,11 @@ def nl2sql_generate_and_run():
     data = request.get_json()
 
     question = data.get("question", "").strip()
-    print(question)
     if not question:
         return jsonify({"error": "Question is empty."}), 400
 
     # Generate SQL
     generated_sql = generate_sql(question)
-    print(question)
 
     # Run SQL (NO DELETE or INSERT)
     if not generated_sql.startswith("SELECT"):
@@ -75,10 +73,22 @@ def nl2sql_generate_and_run():
     
     try:
         df = run_query(generated_sql)
-        print(df)
+
+        # GPT prompt
+        prompt = build_nl2sql_insight_prompt(df)
+        gpt_output = ask_gpt(prompt)
+        
+        # Save output
+        save_insight(
+            analysis_title=question,
+            input_prompt=prompt,
+            gpt_output=gpt_output
+        )
+
         return jsonify({
             "question": question,
             "generated_sql": generated_sql,
+            "gpt_output": gpt_output,
             "columns": df.columns.tolist(),
             "rows": df.to_dict(orient="records")
         })
